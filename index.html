@@ -48,10 +48,7 @@
       --shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
     }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     html, body {
       margin: 0;
@@ -89,19 +86,8 @@
       padding: 4px 2px;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .brand-logo {
-      width: 26px;
-      height: 26px;
-      flex-shrink: 0;
-      color: var(--accent);
-    }
+    .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .brand-logo { width: 26px; height: 26px; flex-shrink: 0; color: var(--accent); }
 
     h1 {
       margin: 0;
@@ -130,8 +116,6 @@
       box-shadow: var(--shadow);
     }
 
-    .theme-btn:active { transform: scale(0.97); }
-
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -140,13 +124,9 @@
       box-shadow: var(--shadow);
     }
 
-    .url-row {
-      display: flex;
-      gap: 8px;
-    }
+    .url-row { display: flex; gap: 8px; }
 
-    input[type="text"],
-    input[type="url"] {
+    input[type="text"] {
       width: 100%;
       min-width: 0;
       min-height: 46px;
@@ -176,17 +156,12 @@
       justify-content: center;
       gap: 8px;
       white-space: nowrap;
-      transition: background-color 0.15s ease, transform 0.1s ease;
     }
 
     .btn:active { transform: scale(0.98); }
     .btn-primary { background: var(--accent); color: #FFFFFF; }
     .btn-primary:hover { background: var(--accent-hover); }
-    .btn-secondary {
-      background: var(--surface-subtle);
-      color: var(--text);
-      border-color: var(--border);
-    }
+    .btn-secondary { background: var(--surface-subtle); color: var(--text); border-color: var(--border); }
     .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
 
     .player-card { padding: 0; overflow: hidden; }
@@ -214,14 +189,9 @@
       text-align: center;
       padding: 20px;
       max-width: 280px;
-      z-index: 1;
     }
 
-    .recorder-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .recorder-stack { display: flex; flex-direction: column; gap: 12px; }
 
     .field-label {
       display: block;
@@ -249,10 +219,8 @@
       justify-content: center;
       padding: 10px 16px;
       gap: 2px;
-      transition: background-color 0.15s ease, transform 0.1s ease;
     }
 
-    .record-btn:active { transform: scale(0.99); }
     .record-btn.is-recording {
       background: var(--surface);
       color: var(--accent);
@@ -290,34 +258,11 @@
       margin-bottom: 12px;
     }
 
-    h2 {
-      margin: 0;
-      font-family: var(--font-serif);
-      font-size: 1.15rem;
-      font-weight: 600;
-    }
+    h2 { margin: 0; font-family: var(--font-serif); font-size: 1.15rem; font-weight: 600; }
+    .action-group { display: flex; gap: 8px; width: 100%; }
+    .action-group .btn { flex: 1; min-height: 44px; padding: 8px 12px; font-size: 0.9rem; }
 
-    .action-group {
-      display: flex;
-      gap: 8px;
-      width: 100%;
-    }
-
-    .action-group .btn {
-      flex: 1;
-      min-height: 44px;
-      padding: 8px 12px;
-      font-size: 0.9rem;
-    }
-
-    .ranges-list {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+    .ranges-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 
     .range-item {
       display: flex;
@@ -347,27 +292,9 @@
     }
 
     .range-jump-btn:active { background: var(--accent-soft); }
-
-    .range-time {
-      font-size: 0.95rem;
-      font-weight: 600;
-      color: var(--accent);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .range-label-text {
-      font-family: var(--font-serif);
-      font-size: 0.95rem;
-      color: var(--text);
-      word-break: break-word;
-    }
-
-    .range-label-empty {
-      font-family: var(--font-sans);
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-style: italic;
-    }
+    .range-time { font-size: 0.95rem; font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; }
+    .range-label-text { font-family: var(--font-serif); font-size: 0.95rem; color: var(--text); word-break: break-word; }
+    .range-label-empty { font-family: var(--font-sans); font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
 
     .delete-btn {
       width: 46px;
@@ -384,11 +311,7 @@
       flex-shrink: 0;
     }
 
-    .delete-btn:hover,
-    .delete-btn:active {
-      color: var(--danger);
-      background: rgba(184, 58, 45, 0.08);
-    }
+    .delete-btn:hover, .delete-btn:active { color: var(--danger); background: rgba(184, 58, 45, 0.08); }
 
     .empty-state {
       text-align: center;
@@ -419,15 +342,8 @@
       text-align: center;
     }
 
-    html[data-theme="dark"] .toast {
-      background: #FAF9F5;
-      color: #141413;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
+    html[data-theme="dark"] .toast { background: #FAF9F5; color: #141413; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
   </style>
 </head>
 <body>
@@ -488,12 +404,12 @@
 
   <script>
     (() => {
-      let player = null;
-      let ytApiReady = false;
       let currentVideoId = null;
+      let latestPlayerTime = 0;
       let isRecording = false;
       let startSeconds = null;
       let liveTimer = null;
+      let ytPollTimer = null;
       let ranges = [];
       let toastTimer = null;
 
@@ -514,13 +430,13 @@
       const toastEl = document.getElementById("toast");
 
       function safeGetStorage(key) {
-        try { return window.localStorage.getItem(key); } catch (err) { return null; }
+        try { return window.localStorage.getItem(key); } catch (e) { return null; }
       }
-
       function safeSetStorage(key, value) {
-        try { window.localStorage.setItem(key, value); return true; } catch (err) { return false; }
+        try { window.localStorage.setItem(key, value); return true; } catch (e) { return false; }
       }
 
+      // Theme
       const THEME_KEY = "lrm_theme_pref";
       const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -530,42 +446,30 @@
         metaThemeColor.setAttribute("content", theme === "dark" ? "#262624" : "#FAF9F5");
       }
 
-      function initTheme() {
-        const saved = safeGetStorage(THEME_KEY);
-        if (saved === "dark" || saved === "light") {
-          applyTheme(saved);
-        } else {
-          applyTheme(systemDarkQuery.matches ? "dark" : "light");
-        }
-      }
+      const savedTheme = safeGetStorage(THEME_KEY);
+      applyTheme(savedTheme === "dark" || savedTheme === "light" ? savedTheme : (systemDarkQuery.matches ? "dark" : "light"));
 
       systemDarkQuery.addEventListener("change", (e) => {
         if (!safeGetStorage(THEME_KEY)) applyTheme(e.matches ? "dark" : "light");
       });
 
       themeToggle.addEventListener("click", () => {
-        const current = document.documentElement.getAttribute("data-theme");
-        const next = current === "dark" ? "light" : "dark";
+        const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
         safeSetStorage(THEME_KEY, next);
         applyTheme(next);
       });
 
-      initTheme();
-
-      function showToast(message) {
-        toastEl.textContent = message;
+      function showToast(msg) {
+        toastEl.textContent = msg;
         toastEl.classList.add("show");
         clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2600);
+        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2500);
       }
 
       function escapeHtml(str) {
-        return String(str)
-          .replace(/&/g, "&")
-          .replace(/</g, "<")
-          .replace(/>/g, ">")
-          .replace(/"/g, """)
-          .replace(/'/g, "'");
+        const div = document.createElement("div");
+        div.textContent = String(str);
+        return div.innerHTML;
       }
 
       function formatTime(totalSec) {
@@ -578,7 +482,6 @@
         return hrs > 0 ? `${hrs}:${mm}:${ss}` : `${mm}:${ss}`;
       }
 
-      // Universal YouTube Video ID extractor
       function extractVideoId(input) {
         const trimmed = input.trim();
         if (!trimmed) return null;
@@ -592,50 +495,40 @@
           /(?:youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/,
           /(?:youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/
         ];
-
         for (const regex of patterns) {
-          const match = trimmed.match(regex);
-          if (match && match[1]) return match[1];
+          const m = trimmed.match(regex);
+          if (m && m[1]) return m[1];
         }
         return null;
       }
 
-      // Load official YouTube IFrame API
-      const tag = document.createElement("script");
-      tag.src = "https://www.youtube.com/iframe_api";
-      document.head.appendChild(tag);
-
-      window.onYouTubeIframeAPIReady = function () {
-        ytApiReady = true;
-        if (currentVideoId && !player) {
-          attachYTController();
-        }
-      };
-
-      function attachYTController() {
+      // Direct postMessage communication with YouTube embed iframe (zero external script hang)
+      function sendYTCommand(func, args = []) {
         const iframe = document.getElementById("yt-player");
-        if (!iframe || !window.YT || !window.YT.Player) return;
-        try {
-          player = new YT.Player("yt-player", {
-            events: {
-              onError: () => showToast("YouTube player error — video may forbid embedding.")
-            }
-          });
-        } catch (e) {}
+        if (!iframe || !iframe.contentWindow) return;
+        iframe.contentWindow.postMessage(
+          JSON.stringify({ event: "command", func: func, args: args }),
+          "*"
+        );
       }
 
-      function loadVideoIntoIframe(videoId) {
+      window.addEventListener("message", (event) => {
+        if (typeof event.data !== "string") return;
+        if (!event.origin.includes("youtube.com") && !event.origin.includes("youtube-nocookie.com")) return;
+        try {
+          const data = JSON.parse(event.data);
+          if (data.info && typeof data.info.currentTime === "number") {
+            latestPlayerTime = Math.floor(data.info.currentTime);
+          }
+        } catch (e) {}
+      });
+
+      function loadVideo(videoId) {
         if (placeholderEl) placeholderEl.style.display = "none";
+        latestPlayerTime = 0;
 
-        if (player && typeof player.loadVideoById === "function") {
-          player.loadVideoById(videoId);
-          return;
-        }
-
-        // Remove any old iframe and create a fresh one immediately
         const oldIframe = document.getElementById("yt-player");
         if (oldIframe) oldIframe.remove();
-        player = null;
 
         const iframe = document.createElement("iframe");
         iframe.id = "yt-player";
@@ -648,11 +541,16 @@
           : "";
 
         iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&playsinline=1&rel=0${originParam}`;
-        videoWrapper.appendChild(iframe);
 
-        if (ytApiReady) {
-          attachYTController();
-        }
+        iframe.addEventListener("load", () => {
+          iframe.contentWindow.postMessage(JSON.stringify({ event: "listening", id: 1 }), "*");
+          clearInterval(ytPollTimer);
+          ytPollTimer = setInterval(() => {
+            iframe.contentWindow.postMessage(JSON.stringify({ event: "listening", id: 1 }), "*");
+          }, 500);
+        });
+
+        videoWrapper.appendChild(iframe);
       }
 
       function storageKeyForVideo(videoId) { return `lrm_ranges_${videoId}`; }
@@ -677,35 +575,27 @@
         safeSetStorage(storageKeyForVideo(currentVideoId), JSON.stringify(ranges));
       }
 
-      function handleLoadVideo() {
+      function handleLoadClick() {
         const videoId = extractVideoId(urlInput.value);
         if (!videoId) {
           showToast("Invalid YouTube link. Paste a video URL.");
           return;
         }
-
         resetRecordingState();
         currentVideoId = videoId;
         safeSetStorage("lrm_last_video_id", videoId);
         loadRangesForVideo(videoId);
-        loadVideoIntoIframe(videoId);
+        loadVideo(videoId);
         showToast("Lecture loaded.");
       }
 
-      loadBtn.addEventListener("click", handleLoadVideo);
+      loadBtn.addEventListener("click", handleLoadClick);
       urlInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
           e.preventDefault();
-          handleLoadVideo();
+          handleLoadClick();
         }
       });
-
-      function getCurrentPlayerSeconds() {
-        if (player && typeof player.getCurrentTime === "function") {
-          return Math.floor(player.getCurrentTime() || 0);
-        }
-        return 0;
-      }
 
       function resetRecordingState() {
         isRecording = false;
@@ -719,9 +609,8 @@
 
       function updateLiveRecordingUI() {
         if (!isRecording || startSeconds === null) return;
-        const currentNow = getCurrentPlayerSeconds();
         recordMainText.innerHTML = `<span class="pulse-dot"></span>Stop range`;
-        recordSubText.textContent = `${formatTime(startSeconds)} → ${formatTime(currentNow)}`;
+        recordSubText.textContent = `${formatTime(startSeconds)} → ${formatTime(latestPlayerTime)}`;
       }
 
       recordBtn.addEventListener("click", () => {
@@ -729,22 +618,16 @@
           showToast("Load a YouTube lecture first.");
           return;
         }
-        if (!player || typeof player.getCurrentTime !== "function") {
-          attachYTController();
-          showToast("Player still connecting — tap Start range again in 1 second.");
-          return;
-        }
 
         if (!isRecording) {
           isRecording = true;
-          startSeconds = getCurrentPlayerSeconds();
+          startSeconds = latestPlayerTime;
           recordBtn.classList.add("is-recording");
           updateLiveRecordingUI();
           liveTimer = setInterval(updateLiveRecordingUI, 250);
         } else {
-          let endSeconds = getCurrentPlayerSeconds();
           let s = startSeconds;
-          let e = endSeconds;
+          let e = latestPlayerTime;
           if (e < s) [s, e] = [e, s];
 
           const cleanLabel = labelInput.value.trim();
@@ -774,28 +657,22 @@
           return;
         }
 
-        const listHtml = ranges
-          .map((item) => {
-            const timeText = `${formatTime(item.start)} - ${formatTime(item.end)}`;
-            const labelHtml = item.label
-              ? `<span class="range-label-text">${escapeHtml(item.label)}</span>`
-              : `<span class="range-label-empty">No label</span>`;
+        rangesContainer.innerHTML = `<ul class="ranges-list">${ranges.map((item) => {
+          const timeText = `${formatTime(item.start)} - ${formatTime(item.end)}`;
+          const labelHtml = item.label
+            ? `<span class="range-label-text">${escapeHtml(item.label)}</span>`
+            : `<span class="range-label-empty">No label</span>`;
 
-            return `
-              <li class="range-item">
-                <button type="button" class="range-jump-btn" data-action="jump" data-start="${item.start}" aria-label="Jump to ${timeText}">
-                  <span class="range-time">${timeText}</span>
-                  ${labelHtml}
-                </button>
-                <button type="button" class="delete-btn" data-action="delete" data-id="${escapeHtml(item.id)}" aria-label="Delete range ${timeText}" title="Delete">
-                  ✕
-                </button>
-              </li>
-            `;
-          })
-          .join("");
-
-        rangesContainer.innerHTML = `<ul class="ranges-list">${listHtml}</ul>`;
+          return `
+            <li class="range-item">
+              <button type="button" class="range-jump-btn" data-action="jump" data-start="${item.start}">
+                <span class="range-time">${timeText}</span>
+                ${labelHtml}
+              </button>
+              <button type="button" class="delete-btn" data-action="delete" data-id="${escapeHtml(item.id)}" title="Delete">✕</button>
+            </li>
+          `;
+        }).join("")}</ul>`;
       }
 
       rangesContainer.addEventListener("click", (e) => {
@@ -805,11 +682,10 @@
         const action = target.getAttribute("data-action");
         if (action === "jump") {
           const jumpSec = Number(target.getAttribute("data-start")) || 0;
-          if (player && typeof player.seekTo === "function") {
-            player.seekTo(jumpSec, true);
-            if (typeof player.playVideo === "function") player.playVideo();
-            showToast(`Jumped to ${formatTime(jumpSec)}`);
-          }
+          sendYTCommand("seekTo", [jumpSec, true]);
+          sendYTCommand("playVideo");
+          latestPlayerTime = jumpSec;
+          showToast(`Jumped to ${formatTime(jumpSec)}`);
         } else if (action === "delete") {
           const id = target.getAttribute("data-id");
           ranges = ranges.filter((r) => r.id !== id);
@@ -832,7 +708,6 @@
       copyAllBtn.addEventListener("click", async () => {
         const text = buildExportText();
         if (!text) return;
-
         try {
           await navigator.clipboard.writeText(text);
           showToast("Copied all ranges to clipboard.");
@@ -843,12 +718,8 @@
           ta.style.opacity = "0";
           document.body.appendChild(ta);
           ta.select();
-          try {
-            document.execCommand("copy");
-            showToast("Copied all ranges to clipboard.");
-          } catch (e) {
-            showToast("Could not copy automatically.");
-          }
+          try { document.execCommand("copy"); showToast("Copied all ranges to clipboard."); }
+          catch (e) { showToast("Could not copy automatically."); }
           document.body.removeChild(ta);
         }
       });
@@ -856,7 +727,6 @@
       exportTxtBtn.addEventListener("click", () => {
         const text = buildExportText();
         if (!text || !currentVideoId) return;
-
         const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -869,13 +739,12 @@
         showToast(`Exported lecture-ranges-${currentVideoId}.txt`);
       });
 
-      // Restore last video on load
       const lastId = safeGetStorage("lrm_last_video_id");
       if (lastId && /^[a-zA-Z0-9_-]{11}$/.test(lastId)) {
         currentVideoId = lastId;
         urlInput.value = `https://www.youtube.com/watch?v=${lastId}`;
         loadRangesForVideo(lastId);
-        loadVideoIntoIframe(lastId);
+        loadVideo(lastId);
       }
 
       if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
