@@ -436,7 +436,6 @@
         try { window.localStorage.setItem(key, value); return true; } catch (e) { return false; }
       }
 
-      // Theme
       const THEME_KEY = "lrm_theme_pref";
       const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -502,7 +501,6 @@
         return null;
       }
 
-      // Direct postMessage communication with YouTube embed iframe (zero external script hang)
       function sendYTCommand(func, args = []) {
         const iframe = document.getElementById("yt-player");
         if (!iframe || !iframe.contentWindow) return;
