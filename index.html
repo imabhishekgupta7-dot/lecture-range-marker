@@ -164,7 +164,20 @@
     .btn-secondary { background: var(--surface-subtle); color: var(--text); border-color: var(--border); }
     .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    .player-card { padding: 0; overflow: hidden; }
+    /* Cinema / Fullscreen Stage */
+    .cinema-stage {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .player-card {
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
     .video-wrapper {
       position: relative;
       width: 100%;
@@ -189,6 +202,38 @@
       text-align: center;
       padding: 20px;
       max-width: 280px;
+    }
+
+    .player-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .player-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .fs-btn {
+      min-height: 44px;
+      padding: 8px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--surface-subtle);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
     }
 
     .recorder-stack { display: flex; flex-direction: column; gap: 12px; }
@@ -247,6 +292,124 @@
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    /* Fullscreen Mode Styling (Native Fullscreen OR Fallback Cinema Mode) */
+    .cinema-stage:fullscreen,
+    .cinema-stage.is-fullscreen {
+      position: fixed;
+      inset: 0;
+      z-index: 900;
+      width: 100vw;
+      height: 100dvh;
+      background: #0D0D0C;
+      padding: 0;
+      gap: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cinema-stage:fullscreen .player-card,
+    .cinema-stage.is-fullscreen .player-card {
+      flex: 1;
+      min-height: 0;
+      border: 0;
+      border-radius: 0;
+      background: #0D0D0C;
+      box-shadow: none;
+      justify-content: center;
+    }
+
+    .cinema-stage:fullscreen .video-wrapper,
+    .cinema-stage.is-fullscreen .video-wrapper {
+      width: 100%;
+      height: 100%;
+      max-height: 100%;
+      aspect-ratio: auto;
+    }
+
+    .cinema-stage:fullscreen .player-toolbar,
+    .cinema-stage.is-fullscreen .player-toolbar {
+      display: none;
+    }
+
+    .cinema-stage:fullscreen .recorder-stack,
+    .cinema-stage.is-fullscreen .recorder-stack {
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 0;
+      border: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(20, 20, 19, 0.94);
+      backdrop-filter: blur(8px);
+    }
+
+    .cinema-stage:fullscreen .field-label,
+    .cinema-stage.is-fullscreen .field-label {
+      display: none;
+    }
+
+    .cinema-stage:fullscreen .label-wrap,
+    .cinema-stage.is-fullscreen .label-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cinema-stage:fullscreen .recorder-stack input[type="text"],
+    .cinema-stage.is-fullscreen .recorder-stack input[type="text"] {
+      min-height: 44px;
+      padding: 8px 12px;
+      font-size: 0.92rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #FAF9F5;
+    }
+
+    .cinema-stage:fullscreen .record-btn,
+    .cinema-stage.is-fullscreen .record-btn {
+      width: auto;
+      min-width: 148px;
+      min-height: 44px;
+      padding: 6px 14px;
+      font-size: 0.92rem;
+      flex-shrink: 0;
+    }
+
+    .cinema-stage:fullscreen .record-btn.is-recording,
+    .cinema-stage.is-fullscreen .record-btn.is-recording {
+      background: #262624;
+      color: #D97757;
+      border-color: #D97757;
+    }
+
+    .cinema-stage:fullscreen .record-subtext,
+    .cinema-stage.is-fullscreen .record-subtext {
+      font-size: 0.78rem;
+    }
+
+    .exit-fs-btn {
+      display: none;
+    }
+
+    .cinema-stage:fullscreen .exit-fs-btn,
+    .cinema-stage.is-fullscreen .exit-fs-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 0 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.1);
+      color: #FAF9F5;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
     }
 
     .ranges-header {
@@ -325,7 +488,7 @@
     .toast {
       position: fixed;
       left: 50%;
-      bottom: 20px;
+      bottom: 76px;
       transform: translate(-50%, 16px);
       background: #141413;
       color: #FAF9F5;
@@ -337,7 +500,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s ease, transform 0.2s ease;
-      z-index: 999;
+      z-index: 1000;
       max-width: calc(100vw - 32px);
       text-align: center;
     }
@@ -365,25 +528,34 @@
       </div>
     </section>
 
-    <section class="card player-card" aria-label="Video Player">
-      <div class="video-wrapper" id="video-wrapper">
-        <div class="player-placeholder" id="player-placeholder">
-          Paste a YouTube lecture link above and tap <strong>Load</strong> to begin.
+    <!-- Fullscreen Cinema Wrapper: Keeps Video + Range Controls together in Fullscreen -->
+    <div class="cinema-stage" id="cinema-stage">
+      <section class="card player-card" aria-label="Video Player">
+        <div class="video-wrapper" id="video-wrapper">
+          <div class="player-placeholder" id="player-placeholder">
+            Paste a YouTube lecture link above and tap <strong>Load</strong> to begin.
+          </div>
         </div>
-      </div>
-    </section>
+        <div class="player-toolbar">
+          <span class="player-hint">Use Study Fullscreen to keep controls visible</span>
+          <button type="button" class="fs-btn" id="enter-fs-btn">⛶ Study Fullscreen</button>
+        </div>
+      </section>
 
-    <section class="card recorder-stack" aria-label="Record Timestamp Range">
-      <div>
-        <label class="field-label" for="range-label">Topic or note (optional)</label>
-        <input type="text" id="range-label" placeholder="e.g., Key theorem proof, Exam tip..." maxlength="140" />
-      </div>
+      <section class="card recorder-stack" aria-label="Record Timestamp Range">
+        <div class="label-wrap">
+          <label class="field-label" for="range-label">Topic or note (optional)</label>
+          <input type="text" id="range-label" placeholder="Topic / note (optional)..." maxlength="140" />
+        </div>
 
-      <button type="button" class="record-btn" id="record-toggle">
-        <span id="record-main-text">Start range</span>
-        <span class="record-subtext" id="record-sub-text">Tap when an important section begins</span>
-      </button>
-    </section>
+        <button type="button" class="record-btn" id="record-toggle">
+          <span id="record-main-text">Start range</span>
+          <span class="record-subtext" id="record-sub-text">Tap when an important section begins</span>
+        </button>
+
+        <button type="button" class="exit-fs-btn" id="exit-fs-btn" title="Exit Fullscreen">✕ Exit</button>
+      </section>
+    </div>
 
     <section class="card" aria-label="Saved Ranges">
       <div class="ranges-header">
@@ -427,6 +599,9 @@
       const metaThemeColor = document.getElementById("meta-theme-color");
       const videoWrapper = document.getElementById("video-wrapper");
       const placeholderEl = document.getElementById("player-placeholder");
+      const cinemaStage = document.getElementById("cinema-stage");
+      const enterFsBtn = document.getElementById("enter-fs-btn");
+      const exitFsBtn = document.getElementById("exit-fs-btn");
       const toastEl = document.getElementById("toast");
 
       function safeGetStorage(key) {
@@ -436,6 +611,7 @@
         try { window.localStorage.setItem(key, value); return true; } catch (e) { return false; }
       }
 
+      // Theme
       const THEME_KEY = "lrm_theme_pref";
       const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -456,6 +632,49 @@
         const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
         safeSetStorage(THEME_KEY, next);
         applyTheme(next);
+      });
+
+      // Study Fullscreen (keeps Range Marker controls visible in fullscreen!)
+      async function enterStudyFullscreen() {
+        cinemaStage.classList.add("is-fullscreen");
+        document.body.style.overflow = "hidden";
+        try {
+          if (cinemaStage.requestFullscreen) {
+            await cinemaStage.requestFullscreen();
+          } else if (cinemaStage.webkitRequestFullscreen) {
+            await cinemaStage.webkitRequestFullscreen();
+          }
+          if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock("landscape").catch(() => {});
+          }
+        } catch (err) {
+          // CSS fixed fullscreen fallback stays active
+        }
+      }
+
+      async function exitStudyFullscreen() {
+        cinemaStage.classList.remove("is-fullscreen");
+        document.body.style.overflow = "";
+        try {
+          if (document.fullscreenElement) {
+            await document.exitFullscreen();
+          } else if (document.webkitFullscreenElement) {
+            await document.webkitExitFullscreen();
+          }
+          if (screen.orientation && screen.orientation.unlock) {
+            screen.orientation.unlock();
+          }
+        } catch (err) {}
+      }
+
+      enterFsBtn.addEventListener("click", enterStudyFullscreen);
+      exitFsBtn.addEventListener("click", exitStudyFullscreen);
+
+      document.addEventListener("fullscreenchange", () => {
+        if (!document.fullscreenElement) {
+          cinemaStage.classList.remove("is-fullscreen");
+          document.body.style.overflow = "";
+        }
       });
 
       function showToast(msg) {
@@ -532,13 +751,12 @@
         iframe.id = "yt-player";
         iframe.title = "YouTube lecture player";
         iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        iframe.allowFullscreen = true;
-
+        // Notice: We omit iframe allowFullscreen so users use "Study Fullscreen" and never lose the range buttons
         const originParam = window.location.origin && window.location.origin.startsWith("http")
           ? `&origin=${encodeURIComponent(window.location.origin)}`
           : "";
 
-        iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&playsinline=1&rel=0${originParam}`;
+        iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&playsinline=1&rel=0&fs=0${originParam}`;
 
         iframe.addEventListener("load", () => {
           iframe.contentWindow.postMessage(JSON.stringify({ event: "listening", id: 1 }), "*");
