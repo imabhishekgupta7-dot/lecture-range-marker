@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#FAF9F5" id="meta-theme-color" />
+  <meta name="description" content="Mark and export timestamp ranges from YouTube lectures." />
+  <title>Lecture Range Marker</title>
+
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #FAF9F5;
+      --surface: #FFFFFF;
+      --surface-subtle: #F3F1EA;
+      --border: #E8E6DC;
+      --text: #141413;
+      --text-muted: #6B6962;
+      --accent: #C6613F;
+      --accent-hover: #B15232;
+      --accent-soft: rgba(198, 97, 63, 0.12);
+      --danger: #B83A2D;
+      --shadow: 0 2px 10px rgba(20, 20, 19, 0.04);
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    html[data-theme="dark"] {
+      --bg: #262624;
+      --surface: #30302E;
+      --surface-subtle: #3A3A37;
+      --border: #42423E;
+      --text: #FAF9F5;
+      --text-muted: #A8A59E;
+      --accent: #D97757;
+      --accent-hover: #E38667;
+      --accent-soft: rgba(217, 119, 87, 0.16);
+      --danger: #E06658;
+      --shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      line-height: 1.5;
+      overflow-x: hidden;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    .app-container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 16px 16px 72px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 4px 2px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-logo {
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .theme-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 1.2rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: var(--shadow);
+    }
+
+    .theme-btn:active { transform: scale(0.97); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .url-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    input[type="text"],
+    input[type="url"] {
+      width: 100%;
+      min-width: 0;
+      min-height: 46px;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input:focus { border-color: var(--accent); }
+
+    .btn {
+      min-height: 46px;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--accent); color: #FFFFFF; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary {
+      background: var(--surface-subtle);
+      color: var(--text);
+      border-color: var(--border);
+    }
+    .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .player-card { padding: 0; overflow: hidden; }
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #141413;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .player-placeholder {
+      color: #A8A59E;
+      font-size: 0.92rem;
+      text-align: center;
+      padding: 20px;
+      max-width: 280px;
+      z-index: 1;
+    }
+
+    .recorder-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .field-label {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .record-btn {
+      width: 100%;
+      min-height: 58px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #FFFFFF;
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 16px;
+      gap: 2px;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .record-btn:active { transform: scale(0.99); }
+    .record-btn.is-recording {
+      background: var(--surface);
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    .record-subtext {
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-variant-numeric: tabular-nums;
+      opacity: 0.92;
+    }
+
+    .pulse-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 6px;
+      animation: pulse 1.2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    .ranges-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      margin: 0;
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .action-group .btn {
+      flex: 1;
+      min-height: 44px;
+      padding: 8px 12px;
+      font-size: 0.9rem;
+    }
+
+    .ranges-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .range-item {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .range-jump-btn {
+      flex: 1;
+      min-width: 0;
+      min-height: 48px;
+      padding: 10px 12px;
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .range-jump-btn:active { background: var(--accent-soft); }
+
+    .range-time {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .range-label-text {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .range-label-empty {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .delete-btn {
+      width: 46px;
+      min-height: 48px;
+      border: 0;
+      border-left: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .delete-btn:hover,
+    .delete-btn:active {
+      color: var(--danger);
+      background: rgba(184, 58, 45, 0.08);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 24px 12px;
+      color: var(--text-muted);
+      font-size: 0.93rem;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 20px;
+      transform: translate(-50%, 16px);
+      background: #141413;
+      color: #FAF9F5;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 999;
+      max-width: calc(100vw - 32px);
+      text-align: center;
+    }
+
+    html[data-theme="dark"] .toast {
+      background: #FAF9F5;
+      color: #141413;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="brand">
+        <svg class="brand-logo" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <path d="M16 3V29M4.74 9.5L27.26 22.5M27.26 9.5L4.74 22.5" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"/>
+        </svg>
+        <h1>Lecture Range Marker</h1>
+      </div>
+      <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">☾</button>
+    </header>
+
+    <section class="card" aria-label="Load YouTube Lecture">
+      <div class="url-row">
+        <input type="text" id="youtube-url" placeholder="Paste YouTube lecture link..." autocomplete="off" spellcheck="false" aria-label="YouTube video link" />
+        <button type="button" class="btn btn-primary" id="load-btn">Load</button>
+      </div>
+    </section>
+
+    <section class="card player-card" aria-label="Video Player">
+      <div class="video-wrapper" id="video-wrapper">
+        <div class="player-placeholder" id="player-placeholder">
+          Paste a YouTube lecture link above and tap <strong>Load</strong> to begin.
+        </div>
+      </div>
+    </section>
+
+    <section class="card recorder-stack" aria-label="Record Timestamp Range">
+      <div>
+        <label class="field-label" for="range-label">Topic or note (optional)</label>
+        <input type="text" id="range-label" placeholder="e.g., Key theorem proof, Exam tip..." maxlength="140" />
+      </div>
+
+      <button type="button" class="record-btn" id="record-toggle">
+        <span id="record-main-text">Start range</span>
+        <span class="record-subtext" id="record-sub-text">Tap when an important section begins</span>
+      </button>
+    </section>
+
+    <section class="card" aria-label="Saved Ranges">
+      <div class="ranges-header">
+        <h2>Saved Ranges (<span id="range-count">0</span>)</h2>
+        <div class="action-group">
+          <button type="button" class="btn btn-secondary" id="copy-all-btn" disabled>Copy all</button>
+          <button type="button" class="btn btn-secondary" id="export-txt-btn" disabled>Export .txt</button>
+        </div>
+      </div>
+
+      <div id="ranges-container">
+        <div class="empty-state">No ranges marked yet. Start playback and tap "Start range".</div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (() => {
+      let player = null;
+      let ytApiReady = false;
+      let currentVideoId = null;
+      let isRecording = false;
+      let startSeconds = null;
+      let liveTimer = null;
+      let ranges = [];
+      let toastTimer = null;
+
+      const urlInput = document.getElementById("youtube-url");
+      const loadBtn = document.getElementById("load-btn");
+      const labelInput = document.getElementById("range-label");
+      const recordBtn = document.getElementById("record-toggle");
+      const recordMainText = document.getElementById("record-main-text");
+      const recordSubText = document.getElementById("record-sub-text");
+      const rangesContainer = document.getElementById("ranges-container");
+      const rangeCountEl = document.getElementById("range-count");
+      const copyAllBtn = document.getElementById("copy-all-btn");
+      const exportTxtBtn = document.getElementById("export-txt-btn");
+      const themeToggle = document.getElementById("theme-toggle");
+      const metaThemeColor = document.getElementById("meta-theme-color");
+      const videoWrapper = document.getElementById("video-wrapper");
+      const placeholderEl = document.getElementById("player-placeholder");
+      const toastEl = document.getElementById("toast");
+
+      function safeGetStorage(key) {
+        try { return window.localStorage.getItem(key); } catch (err) { return null; }
+      }
+
+      function safeSetStorage(key, value) {
+        try { window.localStorage.setItem(key, value); return true; } catch (err) { return false; }
+      }
+
+      const THEME_KEY = "lrm_theme_pref";
+      const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+      function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        themeToggle.textContent = theme === "dark" ? "☀" : "☾";
+        metaThemeColor.setAttribute("content", theme === "dark" ? "#262624" : "#FAF9F5");
+      }
+
+      function initTheme() {
+        const saved = safeGetStorage(THEME_KEY);
+        if (saved === "dark" || saved === "light") {
+          applyTheme(saved);
+        } else {
+          applyTheme(systemDarkQuery.matches ? "dark" : "light");
+        }
+      }
+
+      systemDarkQuery.addEventListener("change", (e) => {
+        if (!safeGetStorage(THEME_KEY)) applyTheme(e.matches ? "dark" : "light");
+      });
+
+      themeToggle.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        const next = current === "dark" ? "light" : "dark";
+        safeSetStorage(THEME_KEY, next);
+        applyTheme(next);
+      });
+
+      initTheme();
+
+      function showToast(message) {
+        toastEl.textContent = message;
+        toastEl.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2600);
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, "&")
+          .replace(/</g, "<")
+          .replace(/>/g, ">")
+          .replace(/"/g, """)
+          .replace(/'/g, "'");
+      }
+
+      function formatTime(totalSec) {
+        const sec = Math.max(0, Math.floor(Number(totalSec) || 0));
+        const hrs = Math.floor(sec / 3600);
+        const mins = Math.floor((sec % 3600) / 60);
+        const remSec = sec % 60;
+        const mm = String(mins).padStart(2, "0");
+        const ss = String(remSec).padStart(2, "0");
+        return hrs > 0 ? `${hrs}:${mm}:${ss}` : `${mm}:${ss}`;
+      }
+
+      // Universal YouTube Video ID extractor
+      function extractVideoId(input) {
+        const trimmed = input.trim();
+        if (!trimmed) return null;
+        if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
+
+        const patterns = [
+          /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+          /(?:youtube\.com\/watch\?.*v=)([a-zA-Z0-9_-]{11})/,
+          /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+          /(?:youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
+          /(?:youtube\.com\/live\/)([a-zA-Z0-9_-]{11})/,
+          /(?:youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/
+        ];
+
+        for (const regex of patterns) {
+          const match = trimmed.match(regex);
+          if (match && match[1]) return match[1];
+        }
+        return null;
+      }
+
+      // Load official YouTube IFrame API
+      const tag = document.createElement("script");
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+
+      window.onYouTubeIframeAPIReady = function () {
+        ytApiReady = true;
+        if (currentVideoId && !player) {
+          attachYTController();
+        }
+      };
+
+      function attachYTController() {
+        const iframe = document.getElementById("yt-player");
+        if (!iframe || !window.YT || !window.YT.Player) return;
+        try {
+          player = new YT.Player("yt-player", {
+            events: {
+              onError: () => showToast("YouTube player error — video may forbid embedding.")
+            }
+          });
+        } catch (e) {}
+      }
+
+      function loadVideoIntoIframe(videoId) {
+        if (placeholderEl) placeholderEl.style.display = "none";
+
+        if (player && typeof player.loadVideoById === "function") {
+          player.loadVideoById(videoId);
+          return;
+        }
+
+        // Remove any old iframe and create a fresh one immediately
+        const oldIframe = document.getElementById("yt-player");
+        if (oldIframe) oldIframe.remove();
+        player = null;
+
+        const iframe = document.createElement("iframe");
+        iframe.id = "yt-player";
+        iframe.title = "YouTube lecture player";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+        iframe.allowFullscreen = true;
+
+        const originParam = window.location.origin && window.location.origin.startsWith("http")
+          ? `&origin=${encodeURIComponent(window.location.origin)}`
+          : "";
+
+        iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&playsinline=1&rel=0${originParam}`;
+        videoWrapper.appendChild(iframe);
+
+        if (ytApiReady) {
+          attachYTController();
+        }
+      }
+
+      function storageKeyForVideo(videoId) { return `lrm_ranges_${videoId}`; }
+
+      function loadRangesForVideo(videoId) {
+        const raw = safeGetStorage(storageKeyForVideo(videoId));
+        if (!raw) {
+          ranges = [];
+        } else {
+          try {
+            const parsed = JSON.parse(raw);
+            ranges = Array.isArray(parsed) ? parsed : [];
+          } catch (e) {
+            ranges = [];
+          }
+        }
+        renderRanges();
+      }
+
+      function saveRangesForVideo() {
+        if (!currentVideoId) return;
+        safeSetStorage(storageKeyForVideo(currentVideoId), JSON.stringify(ranges));
+      }
+
+      function handleLoadVideo() {
+        const videoId = extractVideoId(urlInput.value);
+        if (!videoId) {
+          showToast("Invalid YouTube link. Paste a video URL.");
+          return;
+        }
+
+        resetRecordingState();
+        currentVideoId = videoId;
+        safeSetStorage("lrm_last_video_id", videoId);
+        loadRangesForVideo(videoId);
+        loadVideoIntoIframe(videoId);
+        showToast("Lecture loaded.");
+      }
+
+      loadBtn.addEventListener("click", handleLoadVideo);
+      urlInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleLoadVideo();
+        }
+      });
+
+      function getCurrentPlayerSeconds() {
+        if (player && typeof player.getCurrentTime === "function") {
+          return Math.floor(player.getCurrentTime() || 0);
+        }
+        return 0;
+      }
+
+      function resetRecordingState() {
+        isRecording = false;
+        startSeconds = null;
+        clearInterval(liveTimer);
+        liveTimer = null;
+        recordBtn.classList.remove("is-recording");
+        recordMainText.textContent = "Start range";
+        recordSubText.textContent = "Tap when an important section begins";
+      }
+
+      function updateLiveRecordingUI() {
+        if (!isRecording || startSeconds === null) return;
+        const currentNow = getCurrentPlayerSeconds();
+        recordMainText.innerHTML = `<span class="pulse-dot"></span>Stop range`;
+        recordSubText.textContent = `${formatTime(startSeconds)} → ${formatTime(currentNow)}`;
+      }
+
+      recordBtn.addEventListener("click", () => {
+        if (!currentVideoId) {
+          showToast("Load a YouTube lecture first.");
+          return;
+        }
+        if (!player || typeof player.getCurrentTime !== "function") {
+          attachYTController();
+          showToast("Player still connecting — tap Start range again in 1 second.");
+          return;
+        }
+
+        if (!isRecording) {
+          isRecording = true;
+          startSeconds = getCurrentPlayerSeconds();
+          recordBtn.classList.add("is-recording");
+          updateLiveRecordingUI();
+          liveTimer = setInterval(updateLiveRecordingUI, 250);
+        } else {
+          let endSeconds = getCurrentPlayerSeconds();
+          let s = startSeconds;
+          let e = endSeconds;
+          if (e < s) [s, e] = [e, s];
+
+          const cleanLabel = labelInput.value.trim();
+          ranges.push({
+            id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+            start: s,
+            end: e,
+            label: cleanLabel
+          });
+
+          saveRangesForVideo();
+          renderRanges();
+          labelInput.value = "";
+          resetRecordingState();
+          showToast(`Saved ${formatTime(s)} - ${formatTime(e)}`);
+        }
+      });
+
+      function renderRanges() {
+        rangeCountEl.textContent = String(ranges.length);
+        const hasItems = ranges.length > 0;
+        copyAllBtn.disabled = !hasItems;
+        exportTxtBtn.disabled = !hasItems;
+
+        if (!hasItems) {
+          rangesContainer.innerHTML = `<div class="empty-state">No ranges marked yet. Start playback and tap "Start range".</div>`;
+          return;
+        }
+
+        const listHtml = ranges
+          .map((item) => {
+            const timeText = `${formatTime(item.start)} - ${formatTime(item.end)}`;
+            const labelHtml = item.label
+              ? `<span class="range-label-text">${escapeHtml(item.label)}</span>`
+              : `<span class="range-label-empty">No label</span>`;
+
+            return `
+              <li class="range-item">
+                <button type="button" class="range-jump-btn" data-action="jump" data-start="${item.start}" aria-label="Jump to ${timeText}">
+                  <span class="range-time">${timeText}</span>
+                  ${labelHtml}
+                </button>
+                <button type="button" class="delete-btn" data-action="delete" data-id="${escapeHtml(item.id)}" aria-label="Delete range ${timeText}" title="Delete">
+                  ✕
+                </button>
+              </li>
+            `;
+          })
+          .join("");
+
+        rangesContainer.innerHTML = `<ul class="ranges-list">${listHtml}</ul>`;
+      }
+
+      rangesContainer.addEventListener("click", (e) => {
+        const target = e.target.closest("button");
+        if (!target) return;
+
+        const action = target.getAttribute("data-action");
+        if (action === "jump") {
+          const jumpSec = Number(target.getAttribute("data-start")) || 0;
+          if (player && typeof player.seekTo === "function") {
+            player.seekTo(jumpSec, true);
+            if (typeof player.playVideo === "function") player.playVideo();
+            showToast(`Jumped to ${formatTime(jumpSec)}`);
+          }
+        } else if (action === "delete") {
+          const id = target.getAttribute("data-id");
+          ranges = ranges.filter((r) => r.id !== id);
+          saveRangesForVideo();
+          renderRanges();
+          showToast("Range deleted.");
+        }
+      });
+
+      function buildExportText() {
+        if (!currentVideoId || ranges.length === 0) return "";
+        const lectureLink = `https://www.youtube.com/watch?v=${currentVideoId}`;
+        const lines = ranges.map((r) => {
+          const base = `${formatTime(r.start)} - ${formatTime(r.end)}`;
+          return r.label ? `${base} — ${r.label}` : `${base} —`;
+        });
+        return `${lectureLink}\n\n${lines.join("\n")}`;
+      }
+
+      copyAllBtn.addEventListener("click", async () => {
+        const text = buildExportText();
+        if (!text) return;
+
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast("Copied all ranges to clipboard.");
+        } catch (err) {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand("copy");
+            showToast("Copied all ranges to clipboard.");
+          } catch (e) {
+            showToast("Could not copy automatically.");
+          }
+          document.body.removeChild(ta);
+        }
+      });
+
+      exportTxtBtn.addEventListener("click", () => {
+        const text = buildExportText();
+        if (!text || !currentVideoId) return;
+
+        const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `lecture-ranges-${currentVideoId}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast(`Exported lecture-ranges-${currentVideoId}.txt`);
+      });
+
+      // Restore last video on load
+      const lastId = safeGetStorage("lrm_last_video_id");
+      if (lastId && /^[a-zA-Z0-9_-]{11}$/.test(lastId)) {
+        currentVideoId = lastId;
+        urlInput.value = `https://www.youtube.com/watch?v=${lastId}`;
+        loadRangesForVideo(lastId);
+        loadVideoIntoIframe(lastId);
+      }
+
+      if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js").catch(() => {});
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
