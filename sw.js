@@ -1,4 +1,4 @@
-const CACHE_NAME = "lecture-range-marker-v1";
+const CACHE_NAME = "lecture-range-marker-v5";
 const ASSETS = [
   "./",
   "./index.html",
