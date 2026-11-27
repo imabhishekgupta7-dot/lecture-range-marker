@@ -82,7 +82,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       padding: 4px 2px;
     }
 
@@ -92,7 +92,7 @@
     h1 {
       margin: 0;
       font-family: var(--font-serif);
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 600;
       letter-spacing: -0.01em;
       white-space: nowrap;
@@ -100,20 +100,34 @@
       text-overflow: ellipsis;
     }
 
-    .theme-btn {
-      width: 44px;
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .icon-btn {
+      min-width: 44px;
       height: 44px;
+      padding: 0 12px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text);
-      font-size: 1.2rem;
+      font-size: 0.9rem;
+      font-weight: 600;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 6px;
       cursor: pointer;
-      flex-shrink: 0;
       box-shadow: var(--shadow);
+    }
+
+    .icon-btn.sync-connected {
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     .card {
@@ -124,9 +138,31 @@
       box-shadow: var(--shadow);
     }
 
+    .sync-drawer {
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+      border: 1px solid var(--accent);
+    }
+
+    .sync-drawer.open { display: flex; }
+
+    .sync-desc {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .sync-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .url-row { display: flex; gap: 8px; }
 
-    input[type="text"] {
+    input[type="text"],
+    input[type="password"] {
       width: 100%;
       min-width: 0;
       min-height: 46px;
@@ -136,7 +172,7 @@
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-sans);
-      font-size: 1rem;
+      font-size: 0.95rem;
       outline: none;
     }
 
@@ -144,17 +180,17 @@
 
     .btn {
       min-height: 46px;
-      padding: 10px 18px;
+      padding: 10px 16px;
       border-radius: var(--radius-md);
       border: 1px solid transparent;
       font-family: var(--font-sans);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       white-space: nowrap;
     }
 
@@ -165,18 +201,8 @@
     .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
 
     /* Cinema / Fullscreen Stage */
-    .cinema-stage {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .player-card {
-      padding: 0;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-    }
+    .cinema-stage { display: flex; flex-direction: column; gap: 16px; }
+    .player-card { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
 
     .video-wrapper {
       position: relative;
@@ -217,6 +243,10 @@
     .player-hint {
       font-size: 0.82rem;
       color: var(--text-muted);
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .fs-btn {
@@ -238,13 +268,41 @@
 
     .recorder-stack { display: flex; flex-direction: column; gap: 12px; }
 
+    .label-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
     .field-label {
-      display: block;
       font-family: var(--font-serif);
       font-size: 0.95rem;
       font-weight: 600;
-      margin-bottom: 6px;
       color: var(--text);
+      margin: 0;
+    }
+
+    .shortcut-badges {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .kbd-badge {
+      font-family: var(--font-sans);
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: var(--surface-subtle);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+
+    @media (max-width: 480px) {
+      .shortcut-badges { display: none; }
     }
 
     .record-btn {
@@ -294,7 +352,7 @@
       50% { opacity: 0.35; transform: scale(0.8); }
     }
 
-    /* Fullscreen Mode Styling (Native Fullscreen OR Fallback Cinema Mode) */
+    /* Fullscreen Mode Styling */
     .cinema-stage:fullscreen,
     .cinema-stage.is-fullscreen {
       position: fixed;
@@ -330,9 +388,7 @@
     }
 
     .cinema-stage:fullscreen .player-toolbar,
-    .cinema-stage.is-fullscreen .player-toolbar {
-      display: none;
-    }
+    .cinema-stage.is-fullscreen .player-toolbar { display: none; }
 
     .cinema-stage:fullscreen .recorder-stack,
     .cinema-stage.is-fullscreen .recorder-stack {
@@ -344,19 +400,13 @@
       border: 0;
       border-top: 1px solid rgba(255, 255, 255, 0.14);
       background: rgba(20, 20, 19, 0.94);
-      backdrop-filter: blur(8px);
     }
 
-    .cinema-stage:fullscreen .field-label,
-    .cinema-stage.is-fullscreen .field-label {
-      display: none;
-    }
+    .cinema-stage:fullscreen .label-header-row,
+    .cinema-stage.is-fullscreen .label-header-row { display: none; }
 
     .cinema-stage:fullscreen .label-wrap,
-    .cinema-stage.is-fullscreen .label-wrap {
-      flex: 1;
-      min-width: 0;
-    }
+    .cinema-stage.is-fullscreen .label-wrap { flex: 1; min-width: 0; }
 
     .cinema-stage:fullscreen .recorder-stack input[type="text"],
     .cinema-stage.is-fullscreen .recorder-stack input[type="text"] {
@@ -386,13 +436,9 @@
     }
 
     .cinema-stage:fullscreen .record-subtext,
-    .cinema-stage.is-fullscreen .record-subtext {
-      font-size: 0.78rem;
-    }
+    .cinema-stage.is-fullscreen .record-subtext { font-size: 0.78rem; }
 
-    .exit-fs-btn {
-      display: none;
-    }
+    .exit-fs-btn { display: none; }
 
     .cinema-stage:fullscreen .exit-fs-btn,
     .cinema-stage.is-fullscreen .exit-fs-btn {
@@ -476,6 +522,107 @@
 
     .delete-btn:hover, .delete-btn:active { color: var(--danger); background: rgba(184, 58, 45, 0.08); }
 
+    /* Visual Lecture Playlist */
+    .playlist-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .playlist-card {
+      display: flex;
+      align-items: stretch;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .playlist-card.active-lecture {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .playlist-select-btn {
+      flex: 1;
+      min-width: 0;
+      padding: 8px;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .playlist-thumb-wrap {
+      position: relative;
+      width: 104px;
+      aspect-ratio: 16 / 9;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #141413;
+      flex-shrink: 0;
+    }
+
+    .playlist-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .playlist-resume-pill {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: rgba(20, 20, 19, 0.86);
+      color: #FAF9F5;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .playlist-info {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .playlist-title {
+      font-family: var(--font-serif);
+      font-size: 0.94rem;
+      font-weight: 600;
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .playlist-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .playlist-count-tag {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
     .empty-state {
       text-align: center;
       padding: 24px 12px;
@@ -518,8 +665,26 @@
         </svg>
         <h1>Lecture Range Marker</h1>
       </div>
-      <button type="button" class="theme-btn" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">☾</button>
+      <div class="header-actions">
+        <button type="button" class="icon-btn" id="sync-drawer-btn" aria-label="User ID Sync Settings" title="Cross-Device User Sync">☁ Sync</button>
+        <button type="button" class="icon-btn" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">☾</button>
+      </div>
     </header>
+
+    <!-- User ID Cloud Sync Panel -->
+    <section class="card sync-drawer" id="sync-drawer" aria-label="Cross-Device User Sync">
+      <p class="sync-desc">
+        Sync your entire playlist, pause positions, and ranges between Phone &amp; PC. Leave <strong>User Sync ID</strong> blank on your first device to generate one, then paste that ID on your PC.
+      </p>
+      <input type="password" id="sync-token-input" placeholder="GitHub Token (ghp_... with gist scope)" autocomplete="off" />
+      <div class="sync-row">
+        <input type="text" id="sync-id-input" placeholder="User Sync ID (auto-generated on first sync)" autocomplete="off" style="flex:1;" />
+        <button type="button" class="btn btn-secondary" id="copy-sync-id-btn">Copy ID</button>
+      </div>
+      <div class="sync-row">
+        <button type="button" class="btn btn-primary" id="save-sync-btn" style="flex:1;">Save &amp; Sync Now</button>
+      </div>
+    </section>
 
     <section class="card" aria-label="Load YouTube Lecture">
       <div class="url-row">
@@ -528,38 +693,45 @@
       </div>
     </section>
 
-    <!-- Fullscreen Cinema Wrapper: Keeps Video + Range Controls together in Fullscreen -->
     <div class="cinema-stage" id="cinema-stage">
       <section class="card player-card" aria-label="Video Player">
         <div class="video-wrapper" id="video-wrapper">
           <div class="player-placeholder" id="player-placeholder">
-            Paste a YouTube lecture link above and tap <strong>Load</strong> to begin.
+            Paste a YouTube lecture link above or pick one from your <strong>Lecture Playlist</strong> below.
           </div>
         </div>
         <div class="player-toolbar">
-          <span class="player-hint">Use Study Fullscreen to keep controls visible</span>
-          <button type="button" class="fs-btn" id="enter-fs-btn">⛶ Study Fullscreen</button>
+          <span class="player-hint" id="current-video-title">Ready to load lecture</span>
+          <button type="button" class="fs-btn" id="enter-fs-btn">⛶ Fullscreen</button>
         </div>
       </section>
 
       <section class="card recorder-stack" aria-label="Record Timestamp Range">
         <div class="label-wrap">
-          <label class="field-label" for="range-label">Topic or note (optional)</label>
-          <input type="text" id="range-label" placeholder="Topic / note (optional)..." maxlength="140" />
+          <div class="label-header-row">
+            <label class="field-label" for="range-label">Topic or note (optional)</label>
+            <div class="shortcut-badges" aria-label="Keyboard shortcuts">
+              <span class="kbd-badge" title="Start or Stop Range">S: Start/Stop</span>
+              <span class="kbd-badge" title="Focus Note Field">L: Note</span>
+              <span class="kbd-badge" title="Cancel Active Range">Esc: Cancel</span>
+            </div>
+          </div>
+          <input type="text" id="range-label" placeholder="Topic / note (press Enter while recording to save)..." maxlength="140" />
         </div>
 
         <button type="button" class="record-btn" id="record-toggle">
           <span id="record-main-text">Start range</span>
-          <span class="record-subtext" id="record-sub-text">Tap when an important section begins</span>
+          <span class="record-subtext" id="record-sub-text">Tap or press S when an important section begins</span>
         </button>
 
         <button type="button" class="exit-fs-btn" id="exit-fs-btn" title="Exit Fullscreen">✕ Exit</button>
       </section>
     </div>
 
-    <section class="card" aria-label="Saved Ranges">
+    <!-- Current Video's Saved Ranges -->
+    <section class="card" aria-label="Saved Ranges for Current Lecture">
       <div class="ranges-header">
-        <h2>Saved Ranges (<span id="range-count">0</span>)</h2>
+        <h2>Lecture Timestamps (<span id="range-count">0</span>)</h2>
         <div class="action-group">
           <button type="button" class="btn btn-secondary" id="copy-all-btn" disabled>Copy all</button>
           <button type="button" class="btn btn-secondary" id="export-txt-btn" disabled>Export .txt</button>
@@ -567,7 +739,17 @@
       </div>
 
       <div id="ranges-container">
-        <div class="empty-state">No ranges marked yet. Start playback and tap "Start range".</div>
+        <div class="empty-state">No ranges marked for this video yet. Play and tap "Start range" (or press S).</div>
+      </div>
+    </section>
+
+    <!-- Visual Lecture Playlist -->
+    <section class="card" aria-label="Lecture Playlist">
+      <div class="ranges-header">
+        <h2>Lecture Playlist (<span id="playlist-count">0</span>)</h2>
+      </div>
+      <div id="playlist-container">
+        <div class="empty-state">Every lecture you load is saved here with its resume time and timestamps.</div>
       </div>
     </section>
   </div>
@@ -576,15 +758,26 @@
 
   <script>
     (() => {
+      // Storage Keys
+      const LIBRARY_KEY = "lrm_library_v1";
+      const LAST_VIDEO_KEY = "lrm_last_video_id";
+      const THEME_KEY = "lrm_theme_pref";
+      const SYNC_TOKEN_KEY = "lrm_gist_token";
+      const SYNC_ID_KEY = "lrm_gist_id";
+      const GIST_FILENAME = "lecture-range-marker-sync.json";
+
+      // State
+      let library = {}; // { [videoId]: { title, lastTime, updatedAt, ranges: [{ id, start, end, label }] } }
       let currentVideoId = null;
       let latestPlayerTime = 0;
+      let lastSavedProgress = 0;
       let isRecording = false;
       let startSeconds = null;
       let liveTimer = null;
       let ytPollTimer = null;
-      let ranges = [];
       let toastTimer = null;
 
+      // DOM Elements
       const urlInput = document.getElementById("youtube-url");
       const loadBtn = document.getElementById("load-btn");
       const labelInput = document.getElementById("range-label");
@@ -593,6 +786,9 @@
       const recordSubText = document.getElementById("record-sub-text");
       const rangesContainer = document.getElementById("ranges-container");
       const rangeCountEl = document.getElementById("range-count");
+      const playlistContainer = document.getElementById("playlist-container");
+      const playlistCountEl = document.getElementById("playlist-count");
+      const currentTitleEl = document.getElementById("current-video-title");
       const copyAllBtn = document.getElementById("copy-all-btn");
       const exportTxtBtn = document.getElementById("export-txt-btn");
       const themeToggle = document.getElementById("theme-toggle");
@@ -604,6 +800,14 @@
       const exitFsBtn = document.getElementById("exit-fs-btn");
       const toastEl = document.getElementById("toast");
 
+      const syncDrawerBtn = document.getElementById("sync-drawer-btn");
+      const syncDrawer = document.getElementById("sync-drawer");
+      const syncTokenInput = document.getElementById("sync-token-input");
+      const syncIdInput = document.getElementById("sync-id-input");
+      const copySyncIdBtn = document.getElementById("copy-sync-id-btn");
+      const saveSyncBtn = document.getElementById("save-sync-btn");
+
+      // Safe LocalStorage Helpers
       function safeGetStorage(key) {
         try { return window.localStorage.getItem(key); } catch (e) { return null; }
       }
@@ -611,10 +815,74 @@
         try { window.localStorage.setItem(key, value); return true; } catch (e) { return false; }
       }
 
-      // Theme
-      const THEME_KEY = "lrm_theme_pref";
-      const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      // Migrate legacy per-video keys (lrm_ranges_<vid>) if present
+      function loadLibrary() {
+        try {
+          const raw = safeGetStorage(LIBRARY_KEY);
+          library = raw ? JSON.parse(raw) : {};
+          if (typeof library !== "object" || Array.isArray(library) || !library) library = {};
 
+          for (let i = 0; i < window.localStorage.length; i++) {
+            const k = window.localStorage.key(i);
+            if (k && k.startsWith("lrm_ranges_")) {
+              const vid = k.replace("lrm_ranges_", "");
+              const oldRanges = JSON.parse(window.localStorage.getItem(k) || "[]");
+              if (!library[vid] && Array.isArray(oldRanges)) {
+                library[vid] = {
+                  title: oldRanges.find((r) => r.label)?.label || `Lecture (${vid})`,
+                  lastTime: 0,
+                  updatedAt: Date.now(),
+                  ranges: oldRanges
+                };
+              }
+            }
+          }
+        } catch (e) {
+          library = {};
+        }
+      }
+
+      function persistLibrary(triggerCloudPush = false) {
+        safeSetStorage(LIBRARY_KEY, JSON.stringify(library));
+        renderPlaylist();
+        if (triggerCloudPush) {
+          pushToGitHubGist(true);
+        }
+      }
+
+      function ensureVideoRecord(videoId) {
+        if (!library[videoId]) {
+          library[videoId] = {
+            title: `Lecture (${videoId})`,
+            lastTime: 0,
+            updatedAt: Date.now(),
+            ranges: []
+          };
+        }
+        if (!Array.isArray(library[videoId].ranges)) {
+          library[videoId].ranges = [];
+        }
+        return library[videoId];
+      }
+
+      // Fetch real YouTube video title via noembed (no API key required)
+      async function fetchVideoTitle(videoId) {
+        try {
+          const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
+          if (!res.ok) return;
+          const data = await res.json();
+          if (data && data.title && library[videoId]) {
+            library[videoId].title = data.title;
+            if (currentVideoId === videoId) {
+              currentTitleEl.textContent = data.title;
+            }
+            persistLibrary(false);
+          }
+        } catch (e) {}
+      }
+
+      // Theme
+      const systemDarkQuery = window.matchMedia("(prefers-color-scheme: dark)");
       function applyTheme(theme) {
         document.documentElement.setAttribute("data-theme", theme);
         themeToggle.textContent = theme === "dark" ? "☀" : "☾";
@@ -634,42 +902,29 @@
         applyTheme(next);
       });
 
-      // Study Fullscreen (keeps Range Marker controls visible in fullscreen!)
+      // Study Fullscreen
       async function enterStudyFullscreen() {
         cinemaStage.classList.add("is-fullscreen");
         document.body.style.overflow = "hidden";
         try {
-          if (cinemaStage.requestFullscreen) {
-            await cinemaStage.requestFullscreen();
-          } else if (cinemaStage.webkitRequestFullscreen) {
-            await cinemaStage.webkitRequestFullscreen();
-          }
-          if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock("landscape").catch(() => {});
-          }
-        } catch (err) {
-          // CSS fixed fullscreen fallback stays active
-        }
+          if (cinemaStage.requestFullscreen) await cinemaStage.requestFullscreen();
+          else if (cinemaStage.webkitRequestFullscreen) await cinemaStage.webkitRequestFullscreen();
+          if (screen.orientation && screen.orientation.lock) screen.orientation.lock("landscape").catch(() => {});
+        } catch (err) {}
       }
 
       async function exitStudyFullscreen() {
         cinemaStage.classList.remove("is-fullscreen");
         document.body.style.overflow = "";
         try {
-          if (document.fullscreenElement) {
-            await document.exitFullscreen();
-          } else if (document.webkitFullscreenElement) {
-            await document.webkitExitFullscreen();
-          }
-          if (screen.orientation && screen.orientation.unlock) {
-            screen.orientation.unlock();
-          }
+          if (document.fullscreenElement) await document.exitFullscreen();
+          else if (document.webkitFullscreenElement) await document.webkitExitFullscreen();
+          if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock();
         } catch (err) {}
       }
 
       enterFsBtn.addEventListener("click", enterStudyFullscreen);
       exitFsBtn.addEventListener("click", exitStudyFullscreen);
-
       document.addEventListener("fullscreenchange", () => {
         if (!document.fullscreenElement) {
           cinemaStage.classList.remove("is-fullscreen");
@@ -720,6 +975,7 @@
         return null;
       }
 
+      // YouTube Player Communication + Auto-Resume Progress Saving
       function sendYTCommand(func, args = []) {
         const iframe = document.getElementById("yt-player");
         if (!iframe || !iframe.contentWindow) return;
@@ -735,14 +991,25 @@
         try {
           const data = JSON.parse(event.data);
           if (data.info && typeof data.info.currentTime === "number") {
-            latestPlayerTime = Math.floor(data.info.currentTime);
+            const sec = Math.floor(data.info.currentTime);
+            latestPlayerTime = sec;
+
+            // Save pause/playback resume timestamp every 3 seconds when position changes
+            if (currentVideoId && sec > 0 && Math.abs(sec - lastSavedProgress) >= 3) {
+              lastSavedProgress = sec;
+              const rec = ensureVideoRecord(currentVideoId);
+              rec.lastTime = sec;
+              rec.updatedAt = Date.now();
+              safeSetStorage(LIBRARY_KEY, JSON.stringify(library));
+            }
           }
         } catch (e) {}
       });
 
-      function loadVideo(videoId) {
+      function loadVideo(videoId, resumeSeconds = 0) {
         if (placeholderEl) placeholderEl.style.display = "none";
-        latestPlayerTime = 0;
+        latestPlayerTime = resumeSeconds;
+        lastSavedProgress = resumeSeconds;
 
         const oldIframe = document.getElementById("yt-player");
         if (oldIframe) oldIframe.remove();
@@ -751,12 +1018,13 @@
         iframe.id = "yt-player";
         iframe.title = "YouTube lecture player";
         iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
-        // Notice: We omit iframe allowFullscreen so users use "Study Fullscreen" and never lose the range buttons
+
         const originParam = window.location.origin && window.location.origin.startsWith("http")
           ? `&origin=${encodeURIComponent(window.location.origin)}`
           : "";
+        const startParam = resumeSeconds > 0 ? `&start=${Math.floor(resumeSeconds)}` : "";
 
-        iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&playsinline=1&rel=0&fs=0${originParam}`;
+        iframe.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&playsinline=1&rel=0&fs=0${startParam}${originParam}`;
 
         iframe.addEventListener("load", () => {
           iframe.contentWindow.postMessage(JSON.stringify({ event: "listening", id: 1 }), "*");
@@ -769,26 +1037,32 @@
         videoWrapper.appendChild(iframe);
       }
 
-      function storageKeyForVideo(videoId) { return `lrm_ranges_${videoId}`; }
+      function openLecture(videoId, customStartSec = null) {
+        resetRecordingState();
+        currentVideoId = videoId;
+        safeSetStorage(LAST_VIDEO_KEY, videoId);
 
-      function loadRangesForVideo(videoId) {
-        const raw = safeGetStorage(storageKeyForVideo(videoId));
-        if (!raw) {
-          ranges = [];
-        } else {
-          try {
-            const parsed = JSON.parse(raw);
-            ranges = Array.isArray(parsed) ? parsed : [];
-          } catch (e) {
-            ranges = [];
-          }
+        const rec = ensureVideoRecord(videoId);
+        rec.updatedAt = Date.now();
+        currentTitleEl.textContent = rec.title;
+        urlInput.value = `https://www.youtube.com/watch?v=${videoId}`;
+
+        const startAt = customStartSec !== null ? customStartSec : (rec.lastTime || 0);
+        loadVideo(videoId, startAt);
+        renderCurrentRanges();
+        persistLibrary(false);
+
+        if (rec.title.startsWith("Lecture (")) {
+          fetchVideoTitle(videoId);
         }
-        renderRanges();
-      }
 
-      function saveRangesForVideo() {
-        if (!currentVideoId) return;
-        safeSetStorage(storageKeyForVideo(currentVideoId), JSON.stringify(ranges));
+        if (customStartSec !== null) {
+          showToast(`Jumped to ${formatTime(customStartSec)}`);
+        } else if (startAt > 0) {
+          showToast(`Resumed at ${formatTime(startAt)}`);
+        } else {
+          showToast("Lecture loaded.");
+        }
       }
 
       function handleLoadClick() {
@@ -797,12 +1071,7 @@
           showToast("Invalid YouTube link. Paste a video URL.");
           return;
         }
-        resetRecordingState();
-        currentVideoId = videoId;
-        safeSetStorage("lrm_last_video_id", videoId);
-        loadRangesForVideo(videoId);
-        loadVideo(videoId);
-        showToast("Lecture loaded.");
+        openLecture(videoId);
       }
 
       loadBtn.addEventListener("click", handleLoadClick);
@@ -813,6 +1082,7 @@
         }
       });
 
+      // Range Recording Logic
       function resetRecordingState() {
         isRecording = false;
         startSeconds = null;
@@ -820,7 +1090,7 @@
         liveTimer = null;
         recordBtn.classList.remove("is-recording");
         recordMainText.textContent = "Start range";
-        recordSubText.textContent = "Tap when an important section begins";
+        recordSubText.textContent = "Tap or press S when an important section begins";
       }
 
       function updateLiveRecordingUI() {
@@ -829,7 +1099,7 @@
         recordSubText.textContent = `${formatTime(startSeconds)} → ${formatTime(latestPlayerTime)}`;
       }
 
-      recordBtn.addEventListener("click", () => {
+      function toggleRangeRecording() {
         if (!currentVideoId) {
           showToast("Load a YouTube lecture first.");
           return;
@@ -841,39 +1111,91 @@
           recordBtn.classList.add("is-recording");
           updateLiveRecordingUI();
           liveTimer = setInterval(updateLiveRecordingUI, 250);
+          showToast(`Range started at ${formatTime(startSeconds)}`);
         } else {
           let s = startSeconds;
           let e = latestPlayerTime;
           if (e < s) [s, e] = [e, s];
 
           const cleanLabel = labelInput.value.trim();
-          ranges.push({
+          const rec = ensureVideoRecord(currentVideoId);
+          rec.ranges.push({
             id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
             start: s,
             end: e,
             label: cleanLabel
           });
+          rec.lastTime = latestPlayerTime;
+          rec.updatedAt = Date.now();
 
-          saveRangesForVideo();
-          renderRanges();
           labelInput.value = "";
           resetRecordingState();
+          renderCurrentRanges();
+          persistLibrary(true);
           showToast(`Saved ${formatTime(s)} - ${formatTime(e)}`);
+        }
+      }
+
+      recordBtn.addEventListener("click", toggleRangeRecording);
+
+      // Pressing Enter inside Topic/Note box while recording saves the range immediately
+      labelInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          if (isRecording) {
+            toggleRangeRecording();
+            labelInput.blur();
+          } else {
+            showToast("Tap Start range (or press S) first.");
+          }
+        } else if (e.key === "Escape") {
+          labelInput.blur();
         }
       });
 
-      function renderRanges() {
-        rangeCountEl.textContent = String(ranges.length);
-        const hasItems = ranges.length > 0;
+      // Global Keyboard Shortcuts (S / Alt+R: Start-Stop, L: Label, Esc: Cancel, F: Fullscreen)
+      document.addEventListener("keydown", (e) => {
+        const tag = document.activeElement?.tagName;
+        const isTyping = tag === "INPUT" || tag === "TEXTAREA";
+
+        if (e.key === "Escape" && isRecording) {
+          e.preventDefault();
+          resetRecordingState();
+          showToast("Range cancelled.");
+          return;
+        }
+
+        if (isTyping) return;
+        if (e.ctrlKey || e.metaKey) return;
+
+        const key = e.key.toLowerCase();
+        if (key === "s" || (e.altKey && key === "r")) {
+          e.preventDefault();
+          toggleRangeRecording();
+        } else if (key === "l") {
+          e.preventDefault();
+          labelInput.focus();
+        } else if (key === "f") {
+          e.preventDefault();
+          if (cinemaStage.classList.contains("is-fullscreen")) exitStudyFullscreen();
+          else enterStudyFullscreen();
+        }
+      });
+
+      // Render Current Video's Ranges
+      function renderCurrentRanges() {
+        const list = currentVideoId && library[currentVideoId] ? library[currentVideoId].ranges : [];
+        rangeCountEl.textContent = String(list.length);
+        const hasItems = list.length > 0;
         copyAllBtn.disabled = !hasItems;
         exportTxtBtn.disabled = !hasItems;
 
         if (!hasItems) {
-          rangesContainer.innerHTML = `<div class="empty-state">No ranges marked yet. Start playback and tap "Start range".</div>`;
+          rangesContainer.innerHTML = `<div class="empty-state">No ranges marked for this video yet. Play and tap "Start range" (or press S).</div>`;
           return;
         }
 
-        rangesContainer.innerHTML = `<ul class="ranges-list">${ranges.map((item) => {
+        rangesContainer.innerHTML = `<ul class="ranges-list">${list.map((item) => {
           const timeText = `${formatTime(item.start)} - ${formatTime(item.end)}`;
           const labelHtml = item.label
             ? `<span class="range-label-text">${escapeHtml(item.label)}</span>`
@@ -893,7 +1215,7 @@
 
       rangesContainer.addEventListener("click", (e) => {
         const target = e.target.closest("button");
-        if (!target) return;
+        if (!target || !currentVideoId) return;
 
         const action = target.getAttribute("data-action");
         if (action === "jump") {
@@ -904,21 +1226,91 @@
           showToast(`Jumped to ${formatTime(jumpSec)}`);
         } else if (action === "delete") {
           const id = target.getAttribute("data-id");
-          ranges = ranges.filter((r) => r.id !== id);
-          saveRangesForVideo();
-          renderRanges();
+          const rec = ensureVideoRecord(currentVideoId);
+          rec.ranges = rec.ranges.filter((r) => r.id !== id);
+          rec.updatedAt = Date.now();
+          renderCurrentRanges();
+          persistLibrary(true);
           showToast("Range deleted.");
         }
       });
 
+      // Render Visual Lecture Playlist
+      function renderPlaylist() {
+        const entries = Object.entries(library).sort(
+          (a, b) => (b[1].updatedAt || 0) - (a[1].updatedAt || 0)
+        );
+        playlistCountEl.textContent = String(entries.length);
+
+        if (entries.length === 0) {
+          playlistContainer.innerHTML = `<div class="empty-state">Every lecture you load is saved here with its resume time and timestamps.</div>`;
+          return;
+        }
+
+        playlistContainer.innerHTML = `<ul class="playlist-list">${entries.map(([vid, info]) => {
+          const isCurrent = vid === currentVideoId;
+          const count = Array.isArray(info.ranges) ? info.ranges.length : 0;
+          const resumeSec = Number(info.lastTime) || 0;
+          const resumeBadge = resumeSec > 0
+            ? `<span class="playlist-resume-pill">Paused ${formatTime(resumeSec)}</span>`
+            : "";
+
+          return `
+            <li class="playlist-card ${isCurrent ? "active-lecture" : ""}">
+              <button type="button" class="playlist-select-btn" data-action="select-video" data-vid="${escapeHtml(vid)}">
+                <div class="playlist-thumb-wrap">
+                  <img class="playlist-thumb" src="https://i.ytimg.com/vi/${escapeHtml(vid)}/mqdefault.jpg" alt="" loading="lazy" />
+                  ${resumeBadge}
+                </div>
+                <div class="playlist-info">
+                  <span class="playlist-title">${escapeHtml(info.title || `Lecture (${vid})`)}</span>
+                  <div class="playlist-meta-row">
+                    <span class="playlist-count-tag">${count} timestamp${count === 1 ? "" : "s"}</span>
+                    <span>•</span>
+                    <span>${isCurrent ? "Currently loaded" : "Tap to open"}</span>
+                  </div>
+                </div>
+              </button>
+              <button type="button" class="delete-btn" data-action="remove-video" data-vid="${escapeHtml(vid)}" title="Remove from playlist">✕</button>
+            </li>
+          `;
+        }).join("")}</ul>`;
+      }
+
+      playlistContainer.addEventListener("click", (e) => {
+        const btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+        const action = btn.getAttribute("data-action");
+        const vid = btn.getAttribute("data-vid");
+        if (!vid) return;
+
+        if (action === "select-video") {
+          openLecture(vid);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else if (action === "remove-video") {
+          delete library[vid];
+          if (currentVideoId === vid) {
+            currentVideoId = null;
+            renderCurrentRanges();
+          }
+          persistLibrary(true);
+          showToast("Removed from playlist.");
+        }
+      });
+
+      // Separate Per-Video Copy & Export
       function buildExportText() {
-        if (!currentVideoId || ranges.length === 0) return "";
+        if (!currentVideoId || !library[currentVideoId]) return "";
+        const rec = library[currentVideoId];
+        if (!rec.ranges || rec.ranges.length === 0) return "";
+
         const lectureLink = `https://www.youtube.com/watch?v=${currentVideoId}`;
-        const lines = ranges.map((r) => {
+        const header = rec.title ? `${rec.title}\n${lectureLink}` : lectureLink;
+        const lines = rec.ranges.map((r) => {
           const base = `${formatTime(r.start)} - ${formatTime(r.end)}`;
           return r.label ? `${base} — ${r.label}` : `${base} —`;
         });
-        return `${lectureLink}\n\n${lines.join("\n")}`;
+        return `${header}\n\n${lines.join("\n")}`;
       }
 
       copyAllBtn.addEventListener("click", async () => {
@@ -926,7 +1318,7 @@
         if (!text) return;
         try {
           await navigator.clipboard.writeText(text);
-          showToast("Copied all ranges to clipboard.");
+          showToast("Copied lecture ranges to clipboard.");
         } catch (err) {
           const ta = document.createElement("textarea");
           ta.value = text;
@@ -934,7 +1326,7 @@
           ta.style.opacity = "0";
           document.body.appendChild(ta);
           ta.select();
-          try { document.execCommand("copy"); showToast("Copied all ranges to clipboard."); }
+          try { document.execCommand("copy"); showToast("Copied lecture ranges to clipboard."); }
           catch (e) { showToast("Could not copy automatically."); }
           document.body.removeChild(ta);
         }
@@ -955,12 +1347,161 @@
         showToast(`Exported lecture-ranges-${currentVideoId}.txt`);
       });
 
-      const lastId = safeGetStorage("lrm_last_video_id");
+      // Cross-Device User ID Sync (GitHub Gist)
+      function updateSyncBadge() {
+        const hasCreds = Boolean(safeGetStorage(SYNC_TOKEN_KEY) && safeGetStorage(SYNC_ID_KEY));
+        syncDrawerBtn.classList.toggle("sync-connected", hasCreds);
+        syncDrawerBtn.textContent = hasCreds ? "☁ Synced" : "☁ Sync";
+      }
+
+      syncTokenInput.value = safeGetStorage(SYNC_TOKEN_KEY) || "";
+      syncIdInput.value = safeGetStorage(SYNC_ID_KEY) || "";
+      updateSyncBadge();
+
+      syncDrawerBtn.addEventListener("click", () => syncDrawer.classList.toggle("open"));
+
+      copySyncIdBtn.addEventListener("click", async () => {
+        const id = syncIdInput.value.trim();
+        if (!id) {
+          showToast("No User Sync ID yet — tap Save & Sync Now first.");
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(id);
+          showToast("User Sync ID copied.");
+        } catch (e) {
+          showToast("Select and copy the User Sync ID manually.");
+        }
+      });
+
+      function mergeLibraries(localLib, remoteLib) {
+        const merged = { ...localLib };
+        for (const [vid, remoteRec] of Object.entries(remoteLib || {})) {
+          if (!remoteRec || typeof remoteRec !== "object") continue;
+
+          // Backward compatibility if remote data used old array-only format
+          const remoteRanges = Array.isArray(remoteRec) ? remoteRec : (remoteRec.ranges || []);
+          const localRec = merged[vid] || {
+            title: remoteRec.title || `Lecture (${vid})`,
+            lastTime: remoteRec.lastTime || 0,
+            updatedAt: remoteRec.updatedAt || Date.now(),
+            ranges: []
+          };
+
+          const seenIds = new Set(localRec.ranges.map((r) => r.id));
+          const combinedRanges = [...localRec.ranges];
+          for (const item of remoteRanges) {
+            if (item && item.id && !seenIds.has(item.id)) {
+              combinedRanges.push(item);
+              seenIds.add(item.id);
+            }
+          }
+          combinedRanges.sort((a, b) => (a.start || 0) - (b.start || 0));
+
+          const useRemoteMeta = (remoteRec.updatedAt || 0) > (localRec.updatedAt || 0);
+          merged[vid] = {
+            title: (remoteRec.title && !remoteRec.title.startsWith("Lecture (")) ? remoteRec.title : localRec.title,
+            lastTime: useRemoteMeta ? (remoteRec.lastTime || localRec.lastTime) : Math.max(localRec.lastTime || 0, remoteRec.lastTime || 0),
+            updatedAt: Math.max(localRec.updatedAt || 0, remoteRec.updatedAt || 0),
+            ranges: combinedRanges
+          };
+        }
+        return merged;
+      }
+
+      async function syncWithGitHubGist(silent = false) {
+        const token = syncTokenInput.value.trim();
+        let gistId = syncIdInput.value.trim();
+
+        if (!token) {
+          if (!silent) showToast("Paste your GitHub token first.");
+          return;
+        }
+
+        safeSetStorage(SYNC_TOKEN_KEY, token);
+
+        try {
+          let remoteLib = {};
+          if (gistId) {
+            const getRes = await fetch(`https://api.github.com/gists/${encodeURIComponent(gistId)}`, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/vnd.github+json"
+              }
+            });
+            if (!getRes.ok) throw new Error("Invalid User Sync ID or GitHub token.");
+            const gistData = await getRes.json();
+            const content = gistData.files?.[GIST_FILENAME]?.content;
+            if (content) remoteLib = JSON.parse(content);
+          }
+
+          library = mergeLibraries(library, remoteLib);
+          safeSetStorage(LIBRARY_KEY, JSON.stringify(library));
+
+          const endpoint = gistId
+            ? `https://api.github.com/gists/${encodeURIComponent(gistId)}`
+            : "https://api.github.com/gists";
+          const method = gistId ? "PATCH" : "POST";
+
+          const saveRes = await fetch(endpoint, {
+            method,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              Accept: "application/vnd.github+json",
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              description: "Lecture Range Marker Playlist & Sync",
+              public: false,
+              files: {
+                [GIST_FILENAME]: { content: JSON.stringify(library, null, 2) }
+              }
+            })
+          });
+
+          if (!saveRes.ok) throw new Error("Sync failed. Verify token has gist scope.");
+          const savedGist = await saveRes.json();
+          gistId = savedGist.id;
+
+          syncIdInput.value = gistId;
+          safeSetStorage(SYNC_ID_KEY, gistId);
+          updateSyncBadge();
+
+          renderCurrentRanges();
+          renderPlaylist();
+          if (!silent) showToast("Playlist & timestamps synced!");
+        } catch (err) {
+          if (!silent) showToast(err.message || "Cloud sync failed.");
+        }
+      }
+
+      async function pushToGitHubGist(silent = true) {
+        if (!safeGetStorage(SYNC_TOKEN_KEY) || !safeGetStorage(SYNC_ID_KEY)) return;
+        await syncWithGitHubGist(silent);
+      }
+
+      saveSyncBtn.addEventListener("click", () => syncWithGitHubGist(false));
+
+      // Save final pause position right before closing tab/app
+      window.addEventListener("beforeunload", () => {
+        if (currentVideoId && latestPlayerTime > 0 && library[currentVideoId]) {
+          library[currentVideoId].lastTime = latestPlayerTime;
+          library[currentVideoId].updatedAt = Date.now();
+          safeSetStorage(LIBRARY_KEY, JSON.stringify(library));
+        }
+      });
+
+      // Boot App
+      loadLibrary();
+      renderPlaylist();
+
+      const lastId = safeGetStorage(LAST_VIDEO_KEY);
       if (lastId && /^[a-zA-Z0-9_-]{11}$/.test(lastId)) {
-        currentVideoId = lastId;
-        urlInput.value = `https://www.youtube.com/watch?v=${lastId}`;
-        loadRangesForVideo(lastId);
-        loadVideo(lastId);
+        openLecture(lastId);
+      }
+
+      if (safeGetStorage(SYNC_TOKEN_KEY) && safeGetStorage(SYNC_ID_KEY)) {
+        syncWithGitHubGist(true);
       }
 
       if ("serviceWorker" in navigator && window.location.protocol.startsWith("http")) {
